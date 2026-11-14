@@ -25,37 +25,25 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
       - name: Extract Android project
         run: |
           mkdir -p android-project
           unzip -o FIMS_Android_Project.zip -d android-project
 
-      - name: Locate Gradle Wrapper
-        run: |
-          GRADLEW=$(find android-project -type f -name gradlew -print -quit)
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
 
-          if [ -z "$GRADLEW" ]; then
-            echo "File gradlew tidak ditemukan!"
-            find android-project -maxdepth 5 -type f
-            exit 1
-          fi
-
-          PROJECT_DIR=$(dirname "$GRADLEW")
-          chmod +x "$GRADLEW"
-          echo "PROJECT_DIR=$PROJECT_DIR" >> "$GITHUB_ENV"
-
-      - name: Build Debug APK
-        run: ./gradlew assembleDebug
-        working-directory: ${{ env.PROJECT_DIR }}
+      - name: Build FIMS APK
+        run: gradle assembleDebug
+        working-directory: android-project/FIMS_Android
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: FIMS-Android-APK
-          path: android-project/**/build/outputs/apk/debug/*.apk
+          path: android-project/FIMS_Android/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 14
           
