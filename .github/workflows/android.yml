@@ -28,7 +28,7 @@ jobs:
       - name: Extract Android project
         run: |
           mkdir -p android-project
-          unzip -o FIMS_Android_Project_Revisi_Lokasi_PO_SO_DO.zip -d android-project
+          unzip -o FIMS_Android_Project_Revisi_Lokasi_PO_SO_DO_Invoice.zip -d android-project
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
